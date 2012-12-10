@@ -137,10 +137,8 @@
         if (!method) throw new Error('Method "' + events[key] + '" does not exist');
         var match = key.match(delegateEventSplitter);
         var eventName = match[1], selector = match[2];
-        var $elem = (!selector ? this.$el : this.$(selector));
-        method = _.bind(method, this);
         eventName += '.delegateEvents' + this.cid;
-        this.$el.on(eventName, method);
+        (!selector ? this.$el : this.$(selector)).on(eventName, _.bind(method, this));
       }
     },
     
