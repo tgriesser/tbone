@@ -11,9 +11,7 @@
 })(function () {
   
   var Tbone = {};
-
   var ioc = require("ioc");
-
   var _ = ioc.resolve("underscore");
 
   var Backbone = ioc.resolve("backbone");
@@ -139,7 +137,7 @@
         if (!method) throw new Error('Method "' + events[key] + '" does not exist');
         var match = key.match(delegateEventSplitter);
         var eventName = match[1], selector = match[2];
-        $elem = (!selector ? this.$el : this.$(selector));
+        var $elem = (!selector ? this.$el : this.$(selector));
         method = _.bind(method, this);
         eventName += '.delegateEvents' + this.cid;
         this.$el.on(eventName, method);
