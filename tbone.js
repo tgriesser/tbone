@@ -21,14 +21,11 @@
   _.extend(Tbone, {
     
     $: ioc.resolve("$"),
-    
     Events: Backbone.Events,
-    
     Collection: Backbone.Collection,
-    
     Model: Backbone.Model
   
-  });
+  }, Backbone.Events);
 
   var ArrayProto = Array.prototype;
 
@@ -93,16 +90,11 @@
     // Keys with special meaning *(model, collection, id, className)*, are
     // attached directly to the view.
     _configure: function(options) {
-      if (this.options) {
-        options = _.extend({}, this.options, options);
-      }
+      if (this.options) options = _.extend({}, this.options, options);
       _.extend(this, _.pick(options, viewOptions));
       return this.options = options;
     },
-    
-    // Called after _ensureElement but before initialize, specific to the UI element
-    _postConfigure: function() {},
-    
+        
     // Ensure that the View has a Titanium Element element, by getting the
     // necessary items passed into Tbone.Make and sending them through
     _ensureElement: function() {
