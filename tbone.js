@@ -128,7 +128,7 @@
     //  *{"event id": "callback"}*
     //
     // pairs. Callbacks will be bound to the view, with `this` set properly.
-    delegateEvents: function() {
+    delegateEvents: function(events) {
       if (!(events || (events = _.result(this, 'events')))) return;
       this.undelegateEvents();
       for (var key in events) {
