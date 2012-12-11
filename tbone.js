@@ -25,9 +25,6 @@
   
   }, Backbone.Events);
 
-  var ArrayProto = Array.prototype;
-
-  var slice = ArrayProto.slice;
 
   // Tbone.View
   // -------------
