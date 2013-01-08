@@ -16,16 +16,13 @@
 
   var Backbone = ioc.resolve("backbone");
 
-  _.extend(Tbone, {
-    
-    $: ioc.resolve("$"),
-    Events: Backbone.Events,
-    Collection: Backbone.Collection,
-    Model: Backbone.Model
+  Tbone.$ = Backbone.$ = ioc.resolve("$");
+  Tbone.Events     = Backbone.Events;
+  Tbone.Model      = Backbone.Model;
+  Tbone.Collection = Backbone.Collection;
+
+  _.extend(Tbone, Backbone.Events);
   
-  }, Backbone.Events);
-
-
   // Tbone.View
   // -------------
 
@@ -44,43 +41,13 @@
 
   var delegateEventSplitter = /^(\S+)\s*(.*)$/;
 
-  _.extend(View.prototype, Backbone.Events, {
+  var viewMethods = _.pick(Backbone.View.prototype, 'render', 'initialize', '$', 'undelegateEvents', 'remove', 'undelegateEvents');
+
+  _.extend(View.prototype, viewMethods, Backbone.Events, {
     
     // The default `tagName` of a UIElement element is `"Window"`.
     tagName: "Window",
     
-    // $ a work in progress $ for selecting an element in the current context by id
-    // and doing things like event binding, attribute setting, etc.
-    $: function(selector) {
-      return this.$el.find(selector);
-    },
-    
-    // Initialize is an empty function by default. Override it with your own
-    // initialization logic.
-    initialize: function() {},
-    
-    // **render** is the core function that your view should override, in order
-    // to populate its element (`this.el`), with the appropriate UI elements. The
-    // convention is for **render** to always return `this`.
-    render: function() {
-      return this;
-    },
-    
-    // Clean up references to this UI in order to prevent latent effects and
-    // memory leaks
-    dispose: function() {
-      if (this.model && this.model.off) this.model.off(null, null, this);
-      if (this.collection && this.collection.off) this.collection.off(null, null, this);
-      return this;
-    },
-    
-    // Remove this view, and call dispose
-    remove: function() {
-      this.dispose();
-      this.$el.remove();
-      return this;
-    },
-
     // Performs the initial configuration of a View with a set of options.
     // Keys with special meaning *(model, collection, id, className)*, are
     // attached directly to the view.
@@ -113,8 +80,8 @@
       // Special for window elements, bind on the window close to cleanup
       // any bound model/collection events
       this.$el.one('close', _.bind(function () {
-        this.dispose();
         if (this.close) this.close();
+        this.remove();
       }, this));
 
       return this;
@@ -137,12 +104,8 @@
         eventName += '.delegateEvents' + this.cid;
         (!selector ? this.$el : this.$(selector)).on(eventName, _.bind(method, this));
       }
-    },
-    
-    undelegateEvents: function() {
-      return this.$el.off(".delegateEvents" + this.cid);
     }
-
+    
   });
 
   Tbone.View.extend = Backbone.View.extend;
