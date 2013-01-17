@@ -36,9 +36,6 @@
     this.initialize.apply(this, arguments);
   };
 
-  // List of view options to be merged as properties.
-  var viewOptions = ['model', 'collection', 'el', 'id', 'attributes', 'className', 'tagName', 'events', 'stylesheet'];
-
   var delegateEventSplitter = /^(\S+)\s*(.*)$/;
 
   var viewMethods = _.pick(Backbone.View.prototype, 'render', 'initialize', '$', 'undelegateEvents', 'remove', 'undelegateEvents');
@@ -47,15 +44,6 @@
     
     // The default `tagName` of a UIElement element is `"Window"`.
     tagName: "Window",
-    
-    // Performs the initial configuration of a View with a set of options.
-    // Keys with special meaning *(model, collection, id, className)*, are
-    // attached directly to the view.
-    _configure: function(options) {
-      if (this.options) options = _.extend({}, this.options, options);
-      _.extend(this, _.pick(options, viewOptions));
-      return this.options = options;
-    },
         
     // Ensure that the View has a Titanium Element element, by getting the
     // necessary items passed into Tbone.Make and sending them through
